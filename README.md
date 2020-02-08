@@ -126,3 +126,12 @@ transitland_wrapper.routes()
 - include_geometry: If True, includes route geometry. Default: True
 - gtfs_id: ID used in a GTFS feed's routes.txt file
 ```
+
+
+## Contributing
+
+To release to PyPI:
+```
+python setup.py sdist
+twine upload dist/transitland_wrapper-0.1.0.tar.gz
+```
