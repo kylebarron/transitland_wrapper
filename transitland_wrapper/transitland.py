@@ -85,13 +85,13 @@ def base(
             msg = 'Geometry type must be Point, Polygon, or MultiPolygon'
             raise ValueError(msg)
 
-    if served_by != []:
+    if served_by:
         params['served_by'] = ','.join(served_by)
 
     if operated_by is not None:
         params['operated_by'] = operated_by
 
-    if vehicle_type != []:
+    if vehicle_type:
         params['vehicle_type'] = ','.join(vehicle_type)
 
     if not include_geometry:
