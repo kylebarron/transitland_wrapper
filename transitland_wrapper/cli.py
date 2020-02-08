@@ -4,7 +4,7 @@ import click
 import geopandas as gpd
 from shapely.geometry import box
 
-import transitland
+from .transitland import base
 
 
 @click.group()
@@ -162,7 +162,7 @@ def request(endpoint, **kwargs):
         geometry = load_file(geometry_file)
 
     kwargs['geometry'] = geometry
-    return transitland.base(endpoint=endpoint, **kwargs)
+    return base(endpoint=endpoint, **kwargs)
 
 
 def load_file(file):
