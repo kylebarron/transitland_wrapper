@@ -1,8 +1,8 @@
 from time import sleep
 
-import geojson
 import requests
 from shapely.geometry import asShape
+from shapely.prepared import prep
 
 
 def stops(**kwargs):
@@ -97,18 +97,21 @@ def base(
     if not include_geometry:
         params['include_geometry'] = False
 
-    fc = _request_transit_land(endpoint, params=params)
+    features_iter = _request_transit_land(endpoint, params=params)
 
     if geometry is not None and geometry.type in ['Polygon', 'MultiPolygon']:
+        # "To test one polygon containment against a large batch of points, one
+        # should first use the prepared.prep() function"
+        prepared_geometry = prep(geometry)
+        for features in features_iter:
+            kept_features = []
+            for feature in features:
+                if prepared_geometry.intersects(asShape(feature['geometry'])):
+                    kept_features.append(feature)
 
-        kept_features = []
-        for feature in fc['features']:
-            if asShape(feature['geometry']).intersects(geometry):
-                kept_features.append(feature)
-
-        fc = geojson.FeatureCollection(features=kept_features)
-
-    return fc
+            yield kept_features
+    else:
+        return features_iter
 
 
 def _request_transit_land(endpoint, params=None):
@@ -129,7 +132,6 @@ def _request_transit_land(endpoint, params=None):
     # Page over responses if necessary
     # If there are more responses in another page, there will be a 'next'
     # key in the meta with the url to request
-    all_results = {'type': 'FeatureCollection', 'features': []}
     while True:
         r = _send_request(url, params=params)
         d = r.json()
@@ -137,7 +139,7 @@ def _request_transit_land(endpoint, params=None):
         assert d['type'] == 'FeatureCollection'
         assert set(d.keys()) == {'features', 'meta', 'type'}
 
-        all_results['features'].extend(d['features'])
+        yield d['features']
 
         # If the 'next' key does not exist, done; so break
         if d['meta'].get('next') is None:
@@ -146,8 +148,6 @@ def _request_transit_land(endpoint, params=None):
         # Otherwise, keep paging
         url = d['meta']['next']
         params = None
-
-    return all_results
 
 
 def _send_request(url, params=None):
