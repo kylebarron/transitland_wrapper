@@ -13,7 +13,10 @@ pip install transitland_wrapper
 All CLI commands write a list of GeoJSON `Feature`s to stdout. This way minimal
 results are kept in memory at once. If a `geometry` is passed, the geometry's
 bounding box is given to the transit.land API, and results are tested for
-intersection with the original geometry.
+intersection with the original geometry. The `geometry` file must be readable by
+GeoPandas and will automatically be reprojected to EPSG 4326 if necessary. The
+geometry type must be either `Point`, `Polygon`, `MultiPolygon`, `LineString`,
+or `MultiLineString`.
 
 ### Operators
 

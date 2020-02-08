@@ -4,6 +4,13 @@ import requests
 from shapely.geometry import asShape
 from shapely.prepared import prep
 
+ALLOWED_GEOMETRY_INTERSECTION_TYPES = [
+    'Polygon',
+    'MultiPolygon',
+    'LineString',
+    'MultiLineString',
+] # yapf: disable
+
 
 def stops(**kwargs):
     """Request stops info
@@ -78,11 +85,11 @@ def base(
             if radius is not None:
                 params['r'] = radius
 
-        elif geometry.type in ['Polygon', 'MultiPolygon']:
+        elif geometry.type in ALLOWED_GEOMETRY_INTERSECTION_TYPES:
             params['bbox'] = ','.join(map(str, geometry.bounds))
 
         else:
-            msg = 'Geometry type must be Point, Polygon, or MultiPolygon'
+            msg = f'Geometry type must be one of {ALLOWED_GEOMETRY_INTERSECTION_TYPES}'
             raise ValueError(msg)
 
     if served_by:
@@ -99,7 +106,7 @@ def base(
 
     features_iter = _request_transit_land(endpoint, params=params)
 
-    if geometry is not None and geometry.type in ['Polygon', 'MultiPolygon']:
+    if geometry is not None and geometry.type in ALLOWED_GEOMETRY_INTERSECTION_TYPES:
         # "To test one polygon containment against a large batch of points, one
         # should first use the prepared.prep() function"
         prepared_geometry = prep(geometry)
