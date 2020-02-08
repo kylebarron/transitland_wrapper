@@ -132,6 +132,7 @@ transitland_wrapper.routes()
 
 To release to PyPI:
 ```
+bumpversion minor
 python setup.py sdist
 twine upload dist/transitland_wrapper-0.1.0.tar.gz
 ```
