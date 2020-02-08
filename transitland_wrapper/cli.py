@@ -1,7 +1,6 @@
 import json
 
 import click
-import geopandas as gpd
 from shapely.geometry import box
 
 from .transitland import base
@@ -168,6 +167,8 @@ def request(endpoint, **kwargs):
 def load_file(file):
     """Load file into GeoDataFrame
     """
+    import geopandas as gpd
+
     gdf = gpd.read_file(file)
     # Reproject to EPSG 4326
     gdf = gdf.to_crs(epsg=4326)
