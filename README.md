@@ -78,6 +78,10 @@ Options:
 
 ## Python API
 
+Each function returns a _generator_ of results, because there could be an
+unknown amount of paging involved. Each item of the iterator is a list of
+GeoJSON `Feature`s.
+
 ```py
 import transitland_wrapper
 transitland_wrapper.stops()
