@@ -36,11 +36,11 @@ setup(
         'Programming Language :: Python :: 3.8',
     ],
     description="Wrapper around transit.land API",
-    # entry_points={
-    #     'console_scripts': [
-    #         'demquery=demquery.cli:main',
-    #     ],
-    # },
+    entry_points={
+        'console_scripts': [
+            'transitland=transitland_wrapper.cli:main',
+        ],
+    },
     install_requires=requirements,
     license="MIT license",
     long_description=readme + '\n\n' + history,
