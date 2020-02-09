@@ -1,3 +1,5 @@
+from datetime import datetime
+from collections.abc import Iterable
 from time import sleep
 
 import requests
@@ -25,6 +27,10 @@ def stops(**kwargs):
         - served_by: search by operator onestop_id or route onestop_id
         - gtfs_id: ID used in a GTFS feed's stops.txt file
     """
+    allowed_keys = ['geometry', 'radius', 'served_by', 'gtfs_id']
+    if any(k not in allowed_keys for k in kwargs.keys()):
+        msg = f'invalid parameter; allowed parameters are:\n{allowed_keys}'
+        raise ValueError(msg)
     return base(endpoint='stops', **kwargs)
 
 
@@ -40,6 +46,11 @@ def operators(**kwargs):
           geometries. Not used for Polygon geometries.
         - gtfs_id: ID used in a GTFS feed's agencies.txt file
     """
+    allowed_keys = ['geometry', 'radius', 'gtfs_id']
+    if any(k not in allowed_keys for k in kwargs.keys()):
+        msg = f'invalid parameter; allowed parameters are:\n{allowed_keys}'
+        raise ValueError(msg)
+
     return base(endpoint='operators', **kwargs)
 
 
@@ -60,18 +71,69 @@ def routes(**kwargs):
         - include_geometry: If True, includes route geometry. Default: True
         - gtfs_id: ID used in a GTFS feed's routes.txt file
     """
+    allowed_keys = [
+        'geometry', 'radius', 'operated_by', 'vehicle_type', 'include_geometry',
+        'gtfs_id'
+    ]
+    if any(k not in allowed_keys for k in kwargs.keys()):
+        msg = f'invalid parameter; allowed parameters are:\n{allowed_keys}'
+        raise ValueError(msg)
+
     return base(endpoint='operators', **kwargs)
+
+
+def schedule_stop_pairs(**kwargs):
+    """Request schedule_stop_pairs info
+
+    Args:
+        - geometry: either Polygon or MultiPolygon, to search for stops within
+          the geometry. If a Polygon or MultiPolygon is provided, the search
+          will be done by bounding box, and then results will be filtered for
+          intersection.
+        - origin_onestop_id: Find all Schedule Stop Pairs from origin. Accepts multiple Onestop IDs, separated by commas
+        - destination_onestop_id: Find all Schedule Stop Pairs to a destination. Accepts multiple Onestop IDs, separated by commas
+        - date: Find all Schedule Stop Pairs from origin on date
+        - service_from_date: Find all Schedule Stop Pairs in effect from a date
+        - service_before_date: Find all Schedule Stop Pairs in effect before a date
+        - origin_departure_between: Find all Schedule Stop Pairs with origin_departure_time in a range
+        - trip: Find all Schedule Stop Pairs by trip identifier
+        - route_onestop_id: Find all Schedule Stop Pairs by route. Accepts multiple Onestop IDs, separated by commas.
+        - operator_onestop_id: Find all Schedule Stop Pairs by operator. Accepts multiple Onestop IDs, separated by commas.
+        - active: Schedule Stop Pairs from active FeedVersions
+    """
+    allowed_keys = [
+        'geometry',
+        'origin_onestop_id',
+        'destination_onestop_id',
+        'date',
+        'service_from_date',
+        'service_before_date',
+        'origin_departure_between',
+        'trip',
+        'route_onestop_id',
+        'operator_onestop_id',
+        'active',
+    ]
+    if any(k not in allowed_keys for k in kwargs.keys()):
+        msg = f'invalid parameter; allowed parameters are:\n{allowed_keys}'
+        raise ValueError(msg)
+
+    # Validate dates
+    date_keys = ['date', 'service_from_date', 'service_before_date']
+    for key, val in kwargs.items():
+        if key in date_keys:
+            validate_date(val)
+
+    return base(endpoint='schedule_stop_pairs', **kwargs)
 
 
 def base(
         endpoint,
-        operated_by=None,
         gtfs_id=None,
         geometry=None,
         radius=None,
-        served_by=[],
-        vehicle_type=[],
-        include_geometry=True):
+        include_geometry=True,
+        **kwargs):
     params = {}
     if gtfs_id is not None:
         params['imported_with_gtfs_id'] = True
@@ -92,17 +154,15 @@ def base(
             msg = f'Geometry type must be one of {ALLOWED_GEOMETRY_INTERSECTION_TYPES}'
             raise ValueError(msg)
 
-    if served_by:
-        params['served_by'] = ','.join(served_by)
-
-    if operated_by is not None:
-        params['operated_by'] = operated_by
-
-    if vehicle_type:
-        params['vehicle_type'] = ','.join(vehicle_type)
-
     if not include_geometry:
         params['include_geometry'] = False
+
+    for key, value in kwargs:
+        if key:
+            if isinstance(value, Iterable):
+                params[key] = ','.join(value)
+            else:
+                params[key] = value
 
     features_iter = _request_transit_land(endpoint, params=params)
 
@@ -131,10 +191,18 @@ def _request_transit_land(endpoint, params=None):
     Returns:
         dict of transit.land output
     """
-    allowed_endpoints = ['stops', 'operators', 'routes']
+    allowed_endpoints = ['stops', 'operators', 'routes', 'schedule_stop_pairs']
     assert endpoint in allowed_endpoints, 'Invalid endpoint'
 
-    url = f'https://transit.land/api/v1/{endpoint}.geojson'
+    all_endpoint_types = {
+        'stops': '.geojson',
+        'operators': '.geojson',
+        'routes': '.geojson',
+        'schedule_stop_pairs': ''
+    }
+    endpoint_type = all_endpoint_types[endpoint]
+
+    url = f'https://transit.land/api/v1/{endpoint}{endpoint_type}'
 
     # Page over responses if necessary
     # If there are more responses in another page, there will be a 'next'
@@ -143,10 +211,13 @@ def _request_transit_land(endpoint, params=None):
         r = _send_request(url, params=params)
         d = r.json()
 
-        assert d['type'] == 'FeatureCollection'
-        assert set(d.keys()) == {'features', 'meta', 'type'}
-
-        yield d['features']
+        if endpoint_type == '.geojson':
+            assert d['type'] == 'FeatureCollection'
+            assert set(d.keys()) == {'features', 'meta', 'type'}
+            yield d['features']
+        else:
+            assert set(d.keys()) == {endpoint, 'meta'}
+            yield d[endpoint]
 
         # If the 'next' key does not exist, done; so break
         if d['meta'].get('next') is None:
@@ -175,3 +246,12 @@ def _send_request(url, params=None):
         return _send_request(url, params=params)
 
     return r
+
+
+def validate_date(date_text):
+    """Validate dates to be YYYY-MM-DD
+    """
+    try:
+        datetime.strptime(date_text, '%Y-%m-%d')
+    except ValueError:
+        raise ValueError("Incorrect date format, should be YYYY-MM-DD")
