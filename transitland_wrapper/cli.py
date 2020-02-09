@@ -3,7 +3,7 @@ import json
 import click
 from shapely.geometry import box
 
-from .transitland import base
+import transitland
 
 
 @click.group()
@@ -50,7 +50,8 @@ def main():
     help="ID used in a GTFS feed's stops.txt file")
 def stops(**kwargs):
     """Request stops info"""
-    features_iter = request('stops', **kwargs)
+    kwargs = handle_geometry(kwargs)
+    features_iter = transitland.stops(**kwargs)
     write_to_stdout(features_iter)
 
 
@@ -86,7 +87,8 @@ def stops(**kwargs):
     help="ID used in a GTFS feed's agencies.txt file")
 def operators(**kwargs):
     """Request operators info"""
-    features_iter = request('operators', **kwargs)
+    kwargs = handle_geometry(kwargs)
+    features_iter = transitland.operators(**kwargs)
     write_to_stdout(features_iter)
 
 
@@ -143,11 +145,12 @@ def operators(**kwargs):
     help="Include route geometry")
 def routes(**kwargs):
     """Request routes info"""
-    features_iter = request('routes', **kwargs)
+    kwargs = handle_geometry(kwargs)
+    features_iter = transitland.routes(**kwargs)
     write_to_stdout(features_iter)
 
 
-def request(endpoint, **kwargs):
+def handle_geometry(**kwargs):
     bbox = kwargs.pop('bbox')
     geometry_file = kwargs.pop('geometry')
 
@@ -161,7 +164,7 @@ def request(endpoint, **kwargs):
         geometry = load_file(geometry_file)
 
     kwargs['geometry'] = geometry
-    return base(endpoint=endpoint, **kwargs)
+    return kwargs
 
 
 def load_file(file):
