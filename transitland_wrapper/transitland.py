@@ -133,6 +133,7 @@ def base(
         geometry=None,
         radius=None,
         include_geometry=True,
+        active=False,
         **kwargs):
     params = {}
     if gtfs_id is not None:
@@ -156,6 +157,9 @@ def base(
 
     if not include_geometry:
         params['include_geometry'] = False
+
+    if active:
+        params['active'] = True
 
     for key, value in kwargs:
         if key:

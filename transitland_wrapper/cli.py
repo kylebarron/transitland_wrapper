@@ -150,6 +150,92 @@ def routes(**kwargs):
     write_to_stdout(features_iter)
 
 
+@click.command()
+@click.option(
+    '-b',
+    '--bbox',
+    required=False,
+    default=None,
+    type=str,
+    help='Bounding box to search within')
+@click.option(
+    '-g',
+    '--geometry',
+    required=False,
+    default=None,
+    type=click.Path(exists=True, file_okay=True, readable=True),
+    help='File with geometry to use. Must be readable by geopandas')
+@click.option(
+    '--origin-onestop-id',
+    required=False,
+    multiple=True,
+    default=None,
+    type=str,
+    help='Find all Schedule Stop Pairs from origin')
+@click.option(
+    '--destination-onestop-id',
+    required=False,
+    multiple=True,
+    default=None,
+    type=str,
+    help='Find all Schedule Stop Pairs to a destination')
+@click.option(
+    '--date',
+    required=False,
+    default=None,
+    type=str,
+    help='Find all Schedule Stop Pairs from origin on date')
+@click.option(
+    '--service-from-date',
+    required=False,
+    default=None,
+    type=str,
+    help='Find all Schedule Stop Pairs in effect from a date')
+@click.option(
+    '--service-before-date',
+    required=False,
+    default=None,
+    type=str,
+    help='Find all Schedule Stop Pairs in effect before a date')
+@click.option(
+    '--origin-departure-between',
+    required=False,
+    default=None,
+    type=str,
+    help='Find all Schedule Stop Pairs with origin_departure_time in a range')
+@click.option(
+    '--trip',
+    required=False,
+    default=None,
+    type=str,
+    help='Find all Schedule Stop Pairs by trip identifier')
+@click.option(
+    '--route-onestop-id',
+    required=False,
+    multiple=True,
+    default=None,
+    type=str,
+    help='Find all Schedule Stop Pairs by route')
+@click.option(
+    '--operator-onestop-id',
+    required=False,
+    multiple=True,
+    default=None,
+    type=str,
+    help='Find all Schedule Stop Pairs by operator')
+@click.option(
+    '--active',
+    is_flag=True,
+    default=False,
+    type=bool,
+    help='Schedule Stop Pairs from active FeedVersions')
+def schedule_stop_pairs(**kwargs):
+    """Request routes info"""
+    kwargs = handle_geometry(kwargs)
+    features_iter = transitland.schedule_stop_pairs(**kwargs)
+    write_to_stdout(features_iter)
+
+
 def handle_geometry(**kwargs):
     bbox = kwargs.pop('bbox')
     geometry_file = kwargs.pop('geometry')
@@ -190,6 +276,7 @@ def write_to_stdout(features_iter):
 main.add_command(stops)
 main.add_command(operators)
 main.add_command(routes)
+main.add_command(schedule_stop_pairs)
 
 if __name__ == '__main__':
     main()
