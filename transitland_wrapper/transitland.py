@@ -282,7 +282,8 @@ def _send_request(url, params=None):
     else:
         print(f'returned with status code: {r.status_code}', file=sys.stderr)
         print(f'url: {url}', file=sys.stderr)
-        return r
+        sleep(2)
+        return _send_request(url, params=params)
 
     return r
 
