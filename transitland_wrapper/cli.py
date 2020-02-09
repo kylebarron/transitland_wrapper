@@ -240,13 +240,14 @@ def handle_geometry(**kwargs):
     bbox = kwargs.pop('bbox')
     geometry_file = kwargs.pop('geometry')
 
-    if sum(list(map(bool, [bbox, geometry_file]))) != 1:
+    if sum(list(map(bool, [bbox, geometry_file]))) > 1:
         raise ValueError('must provide either bbox or geometry')
 
+    geometry = None
     if bbox:
         bbox = list(map(float, bbox.split(',')))
         geometry = box(*bbox)
-    if geometry_file:
+    elif geometry_file:
         geometry = load_file(geometry_file)
 
     kwargs['geometry'] = geometry
