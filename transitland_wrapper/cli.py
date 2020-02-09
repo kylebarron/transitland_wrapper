@@ -50,7 +50,7 @@ def main():
     help="ID used in a GTFS feed's stops.txt file")
 def stops(**kwargs):
     """Request stops info"""
-    kwargs = handle_geometry(kwargs)
+    kwargs = handle_geometry(**kwargs)
     features_iter = transitland.stops(**kwargs)
     write_to_stdout(features_iter)
 
@@ -87,7 +87,7 @@ def stops(**kwargs):
     help="ID used in a GTFS feed's agencies.txt file")
 def operators(**kwargs):
     """Request operators info"""
-    kwargs = handle_geometry(kwargs)
+    kwargs = handle_geometry(**kwargs)
     features_iter = transitland.operators(**kwargs)
     write_to_stdout(features_iter)
 
@@ -145,7 +145,7 @@ def operators(**kwargs):
     help="Include route geometry")
 def routes(**kwargs):
     """Request routes info"""
-    kwargs = handle_geometry(kwargs)
+    kwargs = handle_geometry(**kwargs)
     features_iter = transitland.routes(**kwargs)
     write_to_stdout(features_iter)
 
@@ -231,7 +231,7 @@ def routes(**kwargs):
     help='Schedule Stop Pairs from active FeedVersions')
 def schedule_stop_pairs(**kwargs):
     """Request schedule stop pairs info"""
-    kwargs = handle_geometry(kwargs)
+    kwargs = handle_geometry(**kwargs)
     features_iter = transitland.schedule_stop_pairs(**kwargs)
     write_to_stdout(features_iter)
 
