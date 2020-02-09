@@ -17,7 +17,7 @@ ALL_ENDPOINT_TYPES = {
     'stops': '.geojson',
     'operators': '.geojson',
     'routes': '.geojson',
-    'route_stop_pattern': '.geojson',
+    'route_stop_patterns': '.geojson',
     'schedule_stop_pairs': ''
 }
 
@@ -90,7 +90,7 @@ def routes(**kwargs):
     return base(endpoint='operators', **kwargs)
 
 
-def route_stop_pattern(**kwargs):
+def route_stop_patterns(**kwargs):
     """Request route_stop_pattern info
 
     Args:
@@ -107,7 +107,7 @@ def route_stop_pattern(**kwargs):
         msg = f'invalid parameter; allowed parameters are:\n{allowed_keys}'
         raise ValueError(msg)
 
-    return base(endpoint='route_stop_pattern', **kwargs)
+    return base(endpoint='route_stop_patterns', **kwargs)
 
 
 def schedule_stop_pairs(**kwargs):

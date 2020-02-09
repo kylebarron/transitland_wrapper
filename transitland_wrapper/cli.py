@@ -189,10 +189,10 @@ def routes(**kwargs):
     help=
     'any one or more trip ids, separated by comma. Finds Route Stop Patterns with specified trips in trips'
 )
-def route_stop_pattern(**kwargs):
+def route_stop_patterns(**kwargs):
     """Request routes info"""
     kwargs = handle_geometry(**kwargs)
-    features_iter = transitland.route_stop_pattern(**kwargs)
+    features_iter = transitland.route_stop_patterns(**kwargs)
     write_to_stdout(features_iter)
 
 
@@ -324,7 +324,7 @@ main.add_command(stops)
 main.add_command(operators)
 main.add_command(routes)
 main.add_command(schedule_stop_pairs)
-main.add_command(route_stop_pattern)
+main.add_command(route_stop_patterns)
 
 if __name__ == '__main__':
     main()
