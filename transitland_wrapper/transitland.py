@@ -1,3 +1,4 @@
+import sys
 from collections.abc import Iterable
 from datetime import datetime
 from time import sleep
@@ -271,9 +272,17 @@ def _send_request(url, params=None):
     trying again.
     """
     r = requests.get(url, params=params)
-    if r.status_code == 429:
+    if r.status_code == 200:
+        return r
+
+    elif r.status_code == 429:
         sleep(2)
         return _send_request(url, params=params)
+
+    else:
+        print(f'returned with status code: {r.status_code}', file=sys.stderr)
+        print(f'url: {url}', file=sys.stderr)
+        return r
 
     return r
 
