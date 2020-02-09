@@ -127,6 +127,19 @@ Options:
   --help                          Show this message and exit.
 ```
 
+### Onestop ID
+
+```
+Usage: transitland onestop-id [OPTIONS]
+
+Options:
+  --oid TEXT       a Onestop ID for any type of entity (for example, a stop or
+                   an operator)
+  -f, --file PATH  a file with one or more Onestop IDs, with each on their own
+                   line.
+  --help           Show this message and exit.
+```
+
 ## Python API
 
 Each function returns a _generator_ of results, because there could be an
@@ -140,6 +153,7 @@ transitland_wrapper.operators()
 transitland_wrapper.routes()
 transitland_wrapper.route_stop_patterns()
 transitland_wrapper.schedule_stop_pairs()
+transitland_wrapper.onestop_id()
 ```
 
 ### Stops
@@ -214,6 +228,13 @@ transitland_wrapper.schedule_stop_pairs()
 - operator_onestop_id: Find all Schedule Stop Pairs by operator. Accepts multiple Onestop IDs, separated by commas.
 - active: Schedule Stop Pairs from active FeedVersions
 ```
+
+### Onestop ID
+
+```
+- oid: a Onestop ID for any type of entity (for example, a stop or an operator)
+```
+
 
 ## Contributing
 
