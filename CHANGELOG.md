@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.3.0] - 2020-02-09
+
+- Add onestop_id endpoint
+
 ## [0.2.0] - 2020-02-08
 
 - Add route stop patterns and schedule stop pairs endpoints
