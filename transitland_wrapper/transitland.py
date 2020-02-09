@@ -13,6 +13,13 @@ ALLOWED_GEOMETRY_INTERSECTION_TYPES = [
     'MultiLineString',
 ] # yapf: disable
 
+ALL_ENDPOINT_TYPES = {
+    'stops': '.geojson',
+    'operators': '.geojson',
+    'routes': '.geojson',
+    'schedule_stop_pairs': ''
+}
+
 
 def stops(**kwargs):
     """Request stops info
@@ -171,7 +178,9 @@ def base(
 
     features_iter = _request_transit_land(endpoint, params=params)
 
-    if geometry is not None and geometry.type in ALLOWED_GEOMETRY_INTERSECTION_TYPES:
+    endpoint_type = ALL_ENDPOINT_TYPES[endpoint]
+    if ((endpoint_type == '.geojson') and (geometry is not None)
+            and (geometry.type in ALLOWED_GEOMETRY_INTERSECTION_TYPES)):
         # "To test one polygon containment against a large batch of points, one
         # should first use the prepared.prep() function"
         prepared_geometry = prep(geometry)
@@ -183,14 +192,18 @@ def base(
 
             yield kept_features
     else:
-        return features_iter
+        # Not sure why, but this works and just
+        # return features_iter
+        # didn't actually go through the iterator?
+        for x in features_iter:
+            yield x
 
 
 def _request_transit_land(endpoint, params=None):
     """Wrapper to transit.land API to page over all results
 
     Args:
-        - url: url to send requests to
+        - endpoint: endpoint to send requests to
         - params: None or dict of params for sending requests
 
     Returns:
@@ -199,14 +212,7 @@ def _request_transit_land(endpoint, params=None):
     allowed_endpoints = ['stops', 'operators', 'routes', 'schedule_stop_pairs']
     assert endpoint in allowed_endpoints, 'Invalid endpoint'
 
-    all_endpoint_types = {
-        'stops': '.geojson',
-        'operators': '.geojson',
-        'routes': '.geojson',
-        'schedule_stop_pairs': ''
-    }
-    endpoint_type = all_endpoint_types[endpoint]
-
+    endpoint_type = ALL_ENDPOINT_TYPES[endpoint]
     url = f'https://transit.land/api/v1/{endpoint}{endpoint_type}'
 
     # Page over responses if necessary
