@@ -122,7 +122,8 @@ def schedule_stop_pairs(**kwargs):
     date_keys = ['date', 'service_from_date', 'service_before_date']
     for key, val in kwargs.items():
         if key in date_keys:
-            validate_date(val)
+            if val:
+                validate_date(val)
 
     return base(endpoint='schedule_stop_pairs', **kwargs)
 
@@ -161,7 +162,7 @@ def base(
     if active:
         params['active'] = True
 
-    for key, value in kwargs:
+    for key, value in kwargs.items():
         if key:
             if isinstance(value, Iterable):
                 params[key] = ','.join(value)
