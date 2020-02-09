@@ -166,6 +166,52 @@ def routes(**kwargs):
     type=click.Path(exists=True, file_okay=True, readable=True),
     help='File with geometry to use. Must be readable by geopandas')
 @click.option(
+    '--traversed-by',
+    required=False,
+    default=None,
+    type=str,
+    help='find all Route Stop Patterns belonging to route')
+@click.option(
+    '--stops-visited',
+    required=False,
+    default=None,
+    multiple=True,
+    type=str,
+    help=
+    'any one or more stop Onestop IDs, separated by comma. Finds Route Stop Patterns with stops_visited in stop_pattern'
+)
+@click.option(
+    '--trips',
+    required=False,
+    default=None,
+    multiple=True,
+    type=str,
+    help=
+    'any one or more trip ids, separated by comma. Finds Route Stop Patterns with specified trips in trips'
+)
+def route_stop_pattern(**kwargs):
+    """Request routes info"""
+    kwargs = handle_geometry(**kwargs)
+    features_iter = transitland.route_stop_pattern(**kwargs)
+    write_to_stdout(features_iter)
+
+
+@click.command()
+@click.option(
+    '-b',
+    '--bbox',
+    required=False,
+    default=None,
+    type=str,
+    help='Bounding box to search within')
+@click.option(
+    '-g',
+    '--geometry',
+    required=False,
+    default=None,
+    type=click.Path(exists=True, file_okay=True, readable=True),
+    help='File with geometry to use. Must be readable by geopandas')
+@click.option(
     '--origin-onestop-id',
     required=False,
     multiple=True,
@@ -278,6 +324,7 @@ main.add_command(stops)
 main.add_command(operators)
 main.add_command(routes)
 main.add_command(schedule_stop_pairs)
+main.add_command(route_stop_pattern)
 
 if __name__ == '__main__':
     main()

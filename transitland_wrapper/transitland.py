@@ -17,6 +17,7 @@ ALL_ENDPOINT_TYPES = {
     'stops': '.geojson',
     'operators': '.geojson',
     'routes': '.geojson',
+    'route_stop_pattern': '.geojson',
     'schedule_stop_pairs': ''
 }
 
@@ -87,6 +88,26 @@ def routes(**kwargs):
         raise ValueError(msg)
 
     return base(endpoint='operators', **kwargs)
+
+
+def route_stop_pattern(**kwargs):
+    """Request route_stop_pattern info
+
+    Args:
+        - geometry: either Polygon or MultiPolygon, to search for stops within
+          the geometry. If a Polygon or MultiPolygon is provided, the search
+          will be done by bounding box, and then results will be filtered for
+          intersection.
+        - traversed_by: find all Route Stop Patterns belonging to route
+        - stops_visited: any one or more stop Onestop IDs, separated by comma. Finds Route Stop Patterns with stops_visited in stop_pattern.
+        - trips: any one or more trip ids, separated by comma. Finds Route Stop Patterns with specified trips in trips.
+    """
+    allowed_keys = ['geometry', 'traversed_by', 'stops_visited', 'trips']
+    if any(k not in allowed_keys for k in kwargs.keys()):
+        msg = f'invalid parameter; allowed parameters are:\n{allowed_keys}'
+        raise ValueError(msg)
+
+    return base(endpoint='route_stop_pattern', **kwargs)
 
 
 def schedule_stop_pairs(**kwargs):
@@ -209,9 +230,7 @@ def _request_transit_land(endpoint, params=None):
     Returns:
         dict of transit.land output
     """
-    allowed_endpoints = ['stops', 'operators', 'routes', 'schedule_stop_pairs']
-    assert endpoint in allowed_endpoints, 'Invalid endpoint'
-
+    assert endpoint in ALL_ENDPOINT_TYPES.keys(), 'Invalid endpoint'
     endpoint_type = ALL_ENDPOINT_TYPES[endpoint]
     url = f'https://transit.land/api/v1/{endpoint}{endpoint_type}'
 
