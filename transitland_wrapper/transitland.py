@@ -259,7 +259,7 @@ def _request_transit_land(endpoint, params=None):
         params = None
 
 
-def _send_request(url, params=None):
+def _send_request(url, params=None, sleep_time=2):
     """Make request to transit.land API
 
     Wrapper for requests to transit.land API to stay within rate limit
@@ -276,13 +276,13 @@ def _send_request(url, params=None):
         return r
 
     elif r.status_code == 429:
-        sleep(2)
+        sleep(sleep_time)
         return _send_request(url, params=params)
 
     else:
         print(f'returned with status code: {r.status_code}', file=sys.stderr)
         print(f'url: {url}', file=sys.stderr)
-        sleep(2)
+        sleep(sleep_time)
         return _send_request(url, params=params)
 
     return r
