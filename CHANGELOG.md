@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.2.0] - 2020-02-08
+
+- Add route stop patterns and schedule stop pairs endpoints
+
 ## [0.1.1] - 2020-02-08
 
 - Try to fix PyPI bundle
