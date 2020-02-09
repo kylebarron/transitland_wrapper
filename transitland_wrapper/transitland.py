@@ -164,7 +164,7 @@ def onestop_id(oid):
     Args:
         - oid: a Onestop ID for any type of entity (for example, a stop or an operator)
     """
-    return _request_transit_land('onestop_id', {'id': oid})
+    return _request_transit_land('onestop_id', params={'id': oid})
 
 
 def base(
@@ -260,7 +260,8 @@ def _request_transit_land(endpoint, params=None):
             assert set(d.keys()) == {'features', 'meta', 'type'}
             yield d['features']
         elif endpoint == 'onestop_id':
-            return d
+            yield d
+            break
         else:
             assert set(d.keys()) == {endpoint, 'meta'}
             yield d[endpoint]

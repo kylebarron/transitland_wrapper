@@ -302,15 +302,17 @@ def onestop_id(oid, file):
         raise ValueError('must provide either oid or file')
 
     if oid:
-        res = transitland.onestop_id(oid)
-        click.echo(json.dumps(res, separators=(',', ':')))
+        r_iter = transitland.onestop_id(oid)
+        for res in r_iter:
+            click.echo(json.dumps(res, separators=(',', ':')))
 
     else:
         with open(file) as f:
             for line in f:
                 _id = line.strip()
-                res = transitland.onestop_id(oid=_id)
-                click.echo(json.dumps(res, separators=(',', ':')))
+                r_iter = transitland.onestop_id(oid=_id)
+                for res in r_iter:
+                    click.echo(json.dumps(res, separators=(',', ':')))
 
 
 def handle_geometry(**kwargs):
