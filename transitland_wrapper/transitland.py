@@ -19,7 +19,8 @@ ALL_ENDPOINT_TYPES = {
     'operators': '.geojson',
     'routes': '.geojson',
     'route_stop_patterns': '.geojson',
-    'schedule_stop_pairs': ''
+    'schedule_stop_pairs': '',
+    'onestop_id': '',
 }
 
 
@@ -157,6 +158,15 @@ def schedule_stop_pairs(**kwargs):
     return base(endpoint='schedule_stop_pairs', **kwargs)
 
 
+def onestop_id(oid):
+    """Request onestop_id info
+
+    Args:
+        - oid: a Onestop ID for any type of entity (for example, a stop or an operator)
+    """
+    return _request_transit_land('onestop_id', {'id': oid})
+
+
 def base(
         endpoint,
         gtfs_id=None,
@@ -233,7 +243,10 @@ def _request_transit_land(endpoint, params=None):
     """
     assert endpoint in ALL_ENDPOINT_TYPES.keys(), 'Invalid endpoint'
     endpoint_type = ALL_ENDPOINT_TYPES[endpoint]
-    url = f'https://transit.land/api/v1/{endpoint}{endpoint_type}'
+    if endpoint == 'onestop_id':
+        url = f'https://transit.land/api/v1/{endpoint}/{params["id"]}'
+    else:
+        url = f'https://transit.land/api/v1/{endpoint}{endpoint_type}'
 
     # Page over responses if necessary
     # If there are more responses in another page, there will be a 'next'
@@ -246,6 +259,8 @@ def _request_transit_land(endpoint, params=None):
             assert d['type'] == 'FeatureCollection'
             assert set(d.keys()) == {'features', 'meta', 'type'}
             yield d['features']
+        elif endpoint == 'onestop_id':
+            return d
         else:
             assert set(d.keys()) == {endpoint, 'meta'}
             yield d[endpoint]

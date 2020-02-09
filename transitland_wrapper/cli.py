@@ -282,6 +282,37 @@ def schedule_stop_pairs(**kwargs):
     write_to_stdout(features_iter)
 
 
+@click.command()
+@click.option(
+    '--oid',
+    required=False,
+    default=None,
+    type=str,
+    help='a Onestop ID for any type of entity (for example, a stop or an operator)'
+)
+@click.option(
+    '-f',
+    '--file',
+    required=False,
+    default=None,
+    type=click.Path(exists=True, file_okay=True, readable=True),
+    help='a file with one or more Onestop IDs, with each on their own line.')
+def onestop_id(oid, file):
+    if sum(list(map(bool, [oid, file]))) != 1:
+        raise ValueError('must provide either oid or file')
+
+    if oid:
+        res = transitland.onestop_id(oid)
+        click.echo(json.dumps(res, separators=(',', ':')))
+
+    else:
+        with open(file) as f:
+            for line in f:
+                _id = line.strip()
+                res = transitland.onestop_id(oid=_id)
+                click.echo(json.dumps(res, separators=(',', ':')))
+
+
 def handle_geometry(**kwargs):
     bbox = kwargs.pop('bbox')
     geometry_file = kwargs.pop('geometry')
@@ -325,6 +356,7 @@ main.add_command(operators)
 main.add_command(routes)
 main.add_command(schedule_stop_pairs)
 main.add_command(route_stop_patterns)
+main.add_command(onestop_id)
 
 if __name__ == '__main__':
     main()
