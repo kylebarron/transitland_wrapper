@@ -3,7 +3,7 @@ import json
 import click
 from shapely.geometry import box
 
-import transitland
+from . import transitland
 
 
 @click.group()
