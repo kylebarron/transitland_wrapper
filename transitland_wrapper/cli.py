@@ -230,7 +230,7 @@ def routes(**kwargs):
     type=bool,
     help='Schedule Stop Pairs from active FeedVersions')
 def schedule_stop_pairs(**kwargs):
-    """Request routes info"""
+    """Request schedule stop pairs info"""
     kwargs = handle_geometry(kwargs)
     features_iter = transitland.schedule_stop_pairs(**kwargs)
     write_to_stdout(features_iter)
