@@ -1,6 +1,6 @@
 # Transit.land API wrapper
 
-Simple Python wrapper around <transit.land> API.
+Simple Python wrapper around <https://transit.land> API.
 
 ## Install
 
