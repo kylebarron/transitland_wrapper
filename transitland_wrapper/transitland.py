@@ -36,8 +36,9 @@ def stops(**kwargs):
           geometries. Not used for Polygon geometries.
         - served_by: search by operator onestop_id or route onestop_id
         - gtfs_id: ID used in a GTFS feed's stops.txt file
+        - per_page: number of results per page, by default 50
     """
-    allowed_keys = ['geometry', 'radius', 'served_by', 'gtfs_id']
+    allowed_keys = ['geometry', 'radius', 'served_by', 'gtfs_id', 'per_page']
     if any(k not in allowed_keys for k in kwargs.keys()):
         msg = f'invalid parameter; allowed parameters are:\n{allowed_keys}'
         raise ValueError(msg)
@@ -55,8 +56,9 @@ def operators(**kwargs):
         - radius: radius in meters to search around, default 100m for Point
           geometries. Not used for Polygon geometries.
         - gtfs_id: ID used in a GTFS feed's agencies.txt file
+        - per_page: number of results per page, by default 50
     """
-    allowed_keys = ['geometry', 'radius', 'gtfs_id']
+    allowed_keys = ['geometry', 'radius', 'gtfs_id', 'per_page']
     if any(k not in allowed_keys for k in kwargs.keys()):
         msg = f'invalid parameter; allowed parameters are:\n{allowed_keys}'
         raise ValueError(msg)
@@ -80,10 +82,11 @@ def routes(**kwargs):
           column and the Extended GTFS Route Types.
         - include_geometry: If True, includes route geometry. Default: True
         - gtfs_id: ID used in a GTFS feed's routes.txt file
+        - per_page: number of results per page, by default 50
     """
     allowed_keys = [
         'geometry', 'radius', 'operated_by', 'vehicle_type', 'include_geometry',
-        'gtfs_id'
+        'gtfs_id', 'per_page'
     ]
     if any(k not in allowed_keys for k in kwargs.keys()):
         msg = f'invalid parameter; allowed parameters are:\n{allowed_keys}'
@@ -103,8 +106,11 @@ def route_stop_patterns(**kwargs):
         - traversed_by: find all Route Stop Patterns belonging to route
         - stops_visited: any one or more stop Onestop IDs, separated by comma. Finds Route Stop Patterns with stops_visited in stop_pattern.
         - trips: any one or more trip ids, separated by comma. Finds Route Stop Patterns with specified trips in trips.
+        - per_page: number of results per page, by default 50
     """
-    allowed_keys = ['geometry', 'traversed_by', 'stops_visited', 'trips']
+    allowed_keys = [
+        'geometry', 'traversed_by', 'stops_visited', 'trips', 'per_page'
+    ]
     if any(k not in allowed_keys for k in kwargs.keys()):
         msg = f'invalid parameter; allowed parameters are:\n{allowed_keys}'
         raise ValueError(msg)
@@ -130,6 +136,7 @@ def schedule_stop_pairs(**kwargs):
         - route_onestop_id: Find all Schedule Stop Pairs by route. Accepts multiple Onestop IDs, separated by commas.
         - operator_onestop_id: Find all Schedule Stop Pairs by operator. Accepts multiple Onestop IDs, separated by commas.
         - active: Schedule Stop Pairs from active FeedVersions
+        - per_page: number of results per page, by default 50
     """
     allowed_keys = [
         'geometry',
@@ -143,6 +150,7 @@ def schedule_stop_pairs(**kwargs):
         'route_onestop_id',
         'operator_onestop_id',
         'active',
+        'per_page',
     ]
     if any(k not in allowed_keys for k in kwargs.keys()):
         msg = f'invalid parameter; allowed parameters are:\n{allowed_keys}'
@@ -174,6 +182,7 @@ def base(
         radius=None,
         include_geometry=True,
         active=False,
+        per_page=50,
         **kwargs):
     params = {}
     if gtfs_id is not None:
@@ -200,6 +209,10 @@ def base(
 
     if active:
         params['active'] = True
+
+    # 50 is default pagination
+    if per_page != 50:
+        params['per_page'] = per_page
 
     for key, value in kwargs.items():
         if key:

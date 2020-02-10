@@ -48,6 +48,14 @@ def main():
     default=None,
     type=str,
     help="ID used in a GTFS feed's stops.txt file")
+@click.option(
+    '-p',
+    '--per-page',
+    required=False,
+    default=50,
+    show_default=True,
+    type=int,
+    help='number of results per page')
 def stops(**kwargs):
     """Request stops info"""
     kwargs = handle_geometry(**kwargs)
@@ -85,6 +93,14 @@ def stops(**kwargs):
     default=None,
     type=str,
     help="ID used in a GTFS feed's agencies.txt file")
+@click.option(
+    '-p',
+    '--per-page',
+    required=False,
+    default=50,
+    show_default=True,
+    type=int,
+    help='number of results per page')
 def operators(**kwargs):
     """Request operators info"""
     kwargs = handle_geometry(**kwargs)
@@ -143,6 +159,14 @@ def operators(**kwargs):
     default=True,
     type=bool,
     help="Include route geometry")
+@click.option(
+    '-p',
+    '--per-page',
+    required=False,
+    default=50,
+    show_default=True,
+    type=int,
+    help='number of results per page')
 def routes(**kwargs):
     """Request routes info"""
     kwargs = handle_geometry(**kwargs)
@@ -189,6 +213,14 @@ def routes(**kwargs):
     help=
     'any one or more trip ids, separated by comma. Finds Route Stop Patterns with specified trips in trips'
 )
+@click.option(
+    '-p',
+    '--per-page',
+    required=False,
+    default=50,
+    show_default=True,
+    type=int,
+    help='number of results per page')
 def route_stop_patterns(**kwargs):
     """Request routes info"""
     kwargs = handle_geometry(**kwargs)
@@ -275,6 +307,14 @@ def route_stop_patterns(**kwargs):
     default=False,
     type=bool,
     help='Schedule Stop Pairs from active FeedVersions')
+@click.option(
+    '-p',
+    '--per-page',
+    required=False,
+    default=50,
+    show_default=True,
+    type=int,
+    help='number of results per page')
 def schedule_stop_pairs(**kwargs):
     """Request schedule stop pairs info"""
     kwargs = handle_geometry(**kwargs)
@@ -298,6 +338,7 @@ def schedule_stop_pairs(**kwargs):
     type=click.Path(exists=True, file_okay=True, readable=True),
     help='a file with one or more Onestop IDs, with each on their own line.')
 def onestop_id(oid, file):
+    """Request onestop_id info"""
     if sum(list(map(bool, [oid, file]))) != 1:
         raise ValueError('must provide either oid or file')
 
