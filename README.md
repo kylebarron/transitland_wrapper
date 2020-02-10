@@ -26,14 +26,16 @@ Usage: transitland operators [OPTIONS]
   Request operators info
 
 Options:
-  -b, --bbox TEXT         Bounding box to search within
-  -g, --geometry PATH     File with geometry to use. Must be readable by
-                          geopandas
-  -r, --radius FLOAT      radius in meters to search around, default 100m for
-                          Point geometries. Used only for Point geometries.
-  --gtfs-id TEXT          ID used in a GTFS feed's agencies.txt file
-  -p, --per-page INTEGER  number of results per page  [default: 50]
-  --help                  Show this message and exit.
+  -b, --bbox TEXT             Bounding box to search within
+  -g, --geometry PATH         File with geometry to use. Must be readable by
+                              geopandas
+  -r, --radius FLOAT          radius in meters to search around, default 100m
+                              for Point geometries. Used only for Point
+                              geometries.
+  --gtfs-id TEXT              ID used in a GTFS feed's agencies.txt file
+  -p, --per-page INTEGER      number of results per page  [default: 50]
+  --page-all / --no-page-all  page over all responses  [default: True]
+  --help                      Show this message and exit.
 ```
 
 
@@ -45,20 +47,24 @@ Usage: transitland routes [OPTIONS]
   Request routes info
 
 Options:
-  -b, --bbox TEXT         Bounding box to search within
-  -g, --geometry PATH     File with geometry to use. Must be readable by
-                          geopandas
-  -r, --radius FLOAT      radius in meters to search around, default 100m for
-                          Point geometries. Used only for Point geometries.
-  --operated-by TEXT      search by operator onestop_id or route onestop_id
-  --vehicle-type TEXT     find all routes with vehicle type(s) by integer or
-                          string. Possible values defined by the GTFS spec for
-                          the route_type column and the Extended GTFS Route
-                          Types
-  --gtfs-id TEXT          ID used in a GTFS feed's routes.txt file
-  --include-geometry      Include route geometry
-  -p, --per-page INTEGER  number of results per page  [default: 50]
-  --help                  Show this message and exit.
+  -b, --bbox TEXT                 Bounding box to search within
+  -g, --geometry PATH             File with geometry to use. Must be readable
+                                  by geopandas
+  -r, --radius FLOAT              radius in meters to search around, default
+                                  100m for Point geometries. Used only for
+                                  Point geometries.
+  --operated-by TEXT              search by operator onestop_id or route
+                                  onestop_id
+  --vehicle-type TEXT             find all routes with vehicle type(s) by
+                                  integer or string. Possible values defined
+                                  by the GTFS spec for the route_type column
+                                  and the Extended GTFS Route Types
+  --gtfs-id TEXT                  ID used in a GTFS feed's routes.txt file
+  --include-geometry / --no-include-geometry
+                                  Include route geometry  [default: True]
+  -p, --per-page INTEGER          number of results per page  [default: 50]
+  --page-all / --no-page-all      page over all responses  [default: True]
+  --help                          Show this message and exit.
 ```
 
 ### Stops
@@ -69,15 +75,18 @@ Usage: transitland stops [OPTIONS]
   Request stops info
 
 Options:
-  -b, --bbox TEXT         Bounding box to search within
-  -g, --geometry PATH     File with geometry to use. Must be readable by
-                          geopandas
-  -r, --radius FLOAT      radius in meters to search around, default 100m for
-                          Point geometries. Used only for Point geometries.
-  --served-by TEXT        search by operator onestop_id or route onestop_id
-  --gtfs-id TEXT          ID used in a GTFS feed's stops.txt file
-  -p, --per-page INTEGER  number of results per page  [default: 50]
-  --help                  Show this message and exit.
+  -b, --bbox TEXT             Bounding box to search within
+  -g, --geometry PATH         File with geometry to use. Must be readable by
+                              geopandas
+  -r, --radius FLOAT          radius in meters to search around, default 100m
+                              for Point geometries. Used only for Point
+                              geometries.
+  --served-by TEXT            search by operator onestop_id or route
+                              onestop_id
+  --gtfs-id TEXT              ID used in a GTFS feed's stops.txt file
+  -p, --per-page INTEGER      number of results per page  [default: 50]
+  --page-all / --no-page-all  page over all responses  [default: True]
+  --help                      Show this message and exit.
 ```
 
 ### Route Stop Patterns
@@ -88,17 +97,19 @@ Usage: transitland route-stop-patterns [OPTIONS]
   Request routes info
 
 Options:
-  -b, --bbox TEXT         Bounding box to search within
-  -g, --geometry PATH     File with geometry to use. Must be readable by
-                          geopandas
-  --traversed-by TEXT     find all Route Stop Patterns belonging to route
-  --stops-visited TEXT    any one or more stop Onestop IDs, separated by
-                          comma. Finds Route Stop Patterns with stops_visited
-                          in stop_pattern
-  --trips TEXT            any one or more trip ids, separated by comma. Finds
-                          Route Stop Patterns with specified trips in trips
-  -p, --per-page INTEGER  number of results per page  [default: 50]
-  --help                  Show this message and exit.
+  -b, --bbox TEXT             Bounding box to search within
+  -g, --geometry PATH         File with geometry to use. Must be readable by
+                              geopandas
+  --traversed-by TEXT         find all Route Stop Patterns belonging to route
+  --stops-visited TEXT        any one or more stop Onestop IDs, separated by
+                              comma. Finds Route Stop Patterns with
+                              stops_visited in stop_pattern
+  --trips TEXT                any one or more trip ids, separated by comma.
+                              Finds Route Stop Patterns with specified trips
+                              in trips
+  -p, --per-page INTEGER      number of results per page  [default: 50]
+  --page-all / --no-page-all  page over all responses  [default: True]
+  --help                      Show this message and exit.
 ```
 
 ### Schedule Stop Pairs
@@ -128,8 +139,10 @@ Options:
                                   identifier
   --route-onestop-id TEXT         Find all Schedule Stop Pairs by route
   --operator-onestop-id TEXT      Find all Schedule Stop Pairs by operator
-  --active                        Schedule Stop Pairs from active FeedVersions
+  --active / --no-active          Schedule Stop Pairs from active FeedVersions
+                                  [default: True]
   -p, --per-page INTEGER          number of results per page  [default: 50]
+  --page-all / --no-page-all      page over all responses  [default: True]
   --help                          Show this message and exit.
 ```
 
@@ -174,6 +187,7 @@ transitland_wrapper.onestop_id()
 - served_by: search by operator onestop_id or route onestop_id
 - gtfs_id: ID used in a GTFS feed's stops.txt file
 - per_page: number of results per page, by default 50
+- page_all: page over all responses
 ```
 
 ### Operators
@@ -187,6 +201,7 @@ transitland_wrapper.onestop_id()
   geometries. Not used for Polygon geometries.
 - gtfs_id: ID used in a GTFS feed's agencies.txt file
 - per_page: number of results per page, by default 50
+- page_all: page over all responses
 ```
 
 ### Routes
@@ -205,6 +220,7 @@ transitland_wrapper.onestop_id()
 - include_geometry: If True, includes route geometry. Default: True
 - gtfs_id: ID used in a GTFS feed's routes.txt file
 - per_page: number of results per page, by default 50
+- page_all: page over all responses
 ```
 
 ### Route Stop Patterns
@@ -218,6 +234,7 @@ transitland_wrapper.onestop_id()
 - stops_visited: any one or more stop Onestop IDs, separated by comma. Finds Route Stop Patterns with stops_visited in stop_pattern.
 - trips: any one or more trip ids, separated by comma. Finds Route Stop Patterns with specified trips in trips.
 - per_page: number of results per page, by default 50
+- page_all: page over all responses
 ```
 
 ### Schedule Stop Pairs
@@ -238,6 +255,7 @@ transitland_wrapper.onestop_id()
 - operator_onestop_id: Find all Schedule Stop Pairs by operator. Accepts multiple Onestop IDs, separated by commas.
 - active: Schedule Stop Pairs from active FeedVersions
 - per_page: number of results per page, by default 50
+- page_all: page over all responses
 ```
 
 ### Onestop ID

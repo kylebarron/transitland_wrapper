@@ -37,8 +37,11 @@ def stops(**kwargs):
         - served_by: search by operator onestop_id or route onestop_id
         - gtfs_id: ID used in a GTFS feed's stops.txt file
         - per_page: number of results per page, by default 50
+        - page_all: page over all responses
     """
-    allowed_keys = ['geometry', 'radius', 'served_by', 'gtfs_id', 'per_page']
+    allowed_keys = [
+        'geometry', 'radius', 'served_by', 'gtfs_id', 'per_page', 'page_all'
+    ]
     if any(k not in allowed_keys for k in kwargs.keys()):
         msg = f'invalid parameter; allowed parameters are:\n{allowed_keys}'
         raise ValueError(msg)
@@ -57,8 +60,9 @@ def operators(**kwargs):
           geometries. Not used for Polygon geometries.
         - gtfs_id: ID used in a GTFS feed's agencies.txt file
         - per_page: number of results per page, by default 50
+        - page_all: page over all responses
     """
-    allowed_keys = ['geometry', 'radius', 'gtfs_id', 'per_page']
+    allowed_keys = ['geometry', 'radius', 'gtfs_id', 'per_page', 'page_all']
     if any(k not in allowed_keys for k in kwargs.keys()):
         msg = f'invalid parameter; allowed parameters are:\n{allowed_keys}'
         raise ValueError(msg)
@@ -83,10 +87,17 @@ def routes(**kwargs):
         - include_geometry: If True, includes route geometry. Default: True
         - gtfs_id: ID used in a GTFS feed's routes.txt file
         - per_page: number of results per page, by default 50
+        - page_all: page over all responses
     """
     allowed_keys = [
-        'geometry', 'radius', 'operated_by', 'vehicle_type', 'include_geometry',
-        'gtfs_id', 'per_page'
+        'geometry',
+        'radius',
+        'operated_by',
+        'vehicle_type',
+        'include_geometry',
+        'gtfs_id',
+        'per_page',
+        'page_all',
     ]
     if any(k not in allowed_keys for k in kwargs.keys()):
         msg = f'invalid parameter; allowed parameters are:\n{allowed_keys}'
@@ -107,9 +118,15 @@ def route_stop_patterns(**kwargs):
         - stops_visited: any one or more stop Onestop IDs, separated by comma. Finds Route Stop Patterns with stops_visited in stop_pattern.
         - trips: any one or more trip ids, separated by comma. Finds Route Stop Patterns with specified trips in trips.
         - per_page: number of results per page, by default 50
+        - page_all: page over all responses
     """
     allowed_keys = [
-        'geometry', 'traversed_by', 'stops_visited', 'trips', 'per_page'
+        'geometry',
+        'traversed_by',
+        'stops_visited',
+        'trips',
+        'per_page',
+        'page_all',
     ]
     if any(k not in allowed_keys for k in kwargs.keys()):
         msg = f'invalid parameter; allowed parameters are:\n{allowed_keys}'
@@ -137,6 +154,7 @@ def schedule_stop_pairs(**kwargs):
         - operator_onestop_id: Find all Schedule Stop Pairs by operator. Accepts multiple Onestop IDs, separated by commas.
         - active: Schedule Stop Pairs from active FeedVersions
         - per_page: number of results per page, by default 50
+        - page_all: page over all responses
     """
     allowed_keys = [
         'geometry',
@@ -151,6 +169,7 @@ def schedule_stop_pairs(**kwargs):
         'operator_onestop_id',
         'active',
         'per_page',
+        'page_all',
     ]
     if any(k not in allowed_keys for k in kwargs.keys()):
         msg = f'invalid parameter; allowed parameters are:\n{allowed_keys}'
@@ -170,7 +189,8 @@ def onestop_id(oid):
     """Request onestop_id info
 
     Args:
-        - oid: a Onestop ID for any type of entity (for example, a stop or an operator)
+        - oid: a Onestop ID for any type of entity (for example, a stop or an
+          operator)
     """
     return _request_transit_land('onestop_id', params={'id': oid})
 
@@ -183,6 +203,7 @@ def base(
         include_geometry=True,
         active=False,
         per_page=50,
+        page_all=True,
         **kwargs):
     params = {}
     if gtfs_id is not None:
@@ -221,7 +242,8 @@ def base(
             else:
                 params[key] = value
 
-    features_iter = _request_transit_land(endpoint, params=params)
+    features_iter = _request_transit_land(
+        endpoint, params=params, page_all=page_all)
 
     endpoint_type = ALL_ENDPOINT_TYPES[endpoint]
     if ((endpoint_type == '.geojson') and (geometry is not None)
@@ -244,12 +266,13 @@ def base(
             yield x
 
 
-def _request_transit_land(endpoint, params=None):
+def _request_transit_land(endpoint, params=None, page_all=True):
     """Wrapper to transit.land API to page over all results
 
     Args:
         - endpoint: endpoint to send requests to
         - params: None or dict of params for sending requests
+        - page_all: page over all responses
 
     Returns:
         dict of transit.land output
@@ -278,6 +301,9 @@ def _request_transit_land(endpoint, params=None):
         else:
             assert set(d.keys()) == {endpoint, 'meta'}
             yield d[endpoint]
+
+        if not page_all:
+            break
 
         # If the 'next' key does not exist, done; so break
         if d['meta'].get('next') is None:

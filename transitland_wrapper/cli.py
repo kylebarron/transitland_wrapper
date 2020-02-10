@@ -56,6 +56,12 @@ def main():
     show_default=True,
     type=int,
     help='number of results per page')
+@click.option(
+    '--page-all/--no-page-all',
+    is_flag=True,
+    default=True,
+    show_default=True,
+    help='page over all responses')
 def stops(**kwargs):
     """Request stops info"""
     kwargs = handle_geometry(**kwargs)
@@ -101,6 +107,12 @@ def stops(**kwargs):
     show_default=True,
     type=int,
     help='number of results per page')
+@click.option(
+    '--page-all/--no-page-all',
+    is_flag=True,
+    default=True,
+    show_default=True,
+    help='page over all responses')
 def operators(**kwargs):
     """Request operators info"""
     kwargs = handle_geometry(**kwargs)
@@ -154,10 +166,10 @@ def operators(**kwargs):
     type=str,
     help="ID used in a GTFS feed's routes.txt file")
 @click.option(
-    '--include-geometry',
+    '--include-geometry/--no-include-geometry',
     is_flag=True,
     default=True,
-    type=bool,
+    show_default=True,
     help="Include route geometry")
 @click.option(
     '-p',
@@ -167,6 +179,12 @@ def operators(**kwargs):
     show_default=True,
     type=int,
     help='number of results per page')
+@click.option(
+    '--page-all/--no-page-all',
+    is_flag=True,
+    default=True,
+    show_default=True,
+    help='page over all responses')
 def routes(**kwargs):
     """Request routes info"""
     kwargs = handle_geometry(**kwargs)
@@ -221,6 +239,12 @@ def routes(**kwargs):
     show_default=True,
     type=int,
     help='number of results per page')
+@click.option(
+    '--page-all/--no-page-all',
+    is_flag=True,
+    default=True,
+    show_default=True,
+    help='page over all responses')
 def route_stop_patterns(**kwargs):
     """Request routes info"""
     kwargs = handle_geometry(**kwargs)
@@ -302,10 +326,10 @@ def route_stop_patterns(**kwargs):
     type=str,
     help='Find all Schedule Stop Pairs by operator')
 @click.option(
-    '--active',
+    '--active/--no-active',
     is_flag=True,
-    default=False,
-    type=bool,
+    default=True,
+    show_default=True,
     help='Schedule Stop Pairs from active FeedVersions')
 @click.option(
     '-p',
@@ -315,6 +339,12 @@ def route_stop_patterns(**kwargs):
     show_default=True,
     type=int,
     help='number of results per page')
+@click.option(
+    '--page-all/--no-page-all',
+    is_flag=True,
+    default=True,
+    show_default=True,
+    help='page over all responses')
 def schedule_stop_pairs(**kwargs):
     """Request schedule stop pairs info"""
     kwargs = handle_geometry(**kwargs)
