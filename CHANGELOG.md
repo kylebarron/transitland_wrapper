@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.4.0] - 2020-02-09
+
+- Add argument for paging size
+- Add option to not page over all responses
+
 ## [0.3.0] - 2020-02-09
 
 - Add onestop_id endpoint
