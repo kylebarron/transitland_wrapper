@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.4.1] - 2020-02-19
+
+- Fix bug where the routes cli used the operators API endpoint
+
 ## [0.4.0] - 2020-02-09
 
 - Add argument for paging size
