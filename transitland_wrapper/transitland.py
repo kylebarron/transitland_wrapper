@@ -237,7 +237,9 @@ def base(
 
     for key, value in kwargs.items():
         if key:
-            if isinstance(value, Iterable):
+            if isinstance(value, str):
+                params[key] = value
+            elif isinstance(value, Iterable):
                 params[key] = ','.join(value)
             else:
                 params[key] = value
@@ -337,6 +339,9 @@ def _send_request(url, params=None, sleep_time=2):
     else:
         print(f'returned with status code: {r.status_code}', file=sys.stderr)
         print(f'url: {url}', file=sys.stderr)
+        if params is not None:
+            print(f'params: {params}', file=sys.stderr)
+
         sleep(sleep_time)
         return _send_request(url, params=params)
 
