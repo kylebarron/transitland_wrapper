@@ -103,7 +103,7 @@ def routes(**kwargs):
         msg = f'invalid parameter; allowed parameters are:\n{allowed_keys}'
         raise ValueError(msg)
 
-    return base(endpoint='operators', **kwargs)
+    return base(endpoint='routes', **kwargs)
 
 
 def route_stop_patterns(**kwargs):
