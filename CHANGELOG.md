@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.4.2] - 2020-02-19
+
+- Fix bug where a string was treated as an iterable to be joined
+
 ## [0.4.1] - 2020-02-19
 
 - Fix bug where the routes cli used the operators API endpoint
