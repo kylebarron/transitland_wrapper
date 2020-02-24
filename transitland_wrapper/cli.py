@@ -25,7 +25,7 @@ def main():
     required=False,
     default=None,
     type=click.Path(exists=True, file_okay=True, readable=True),
-    help='File with geometry to use. Must be readable by geopandas')
+    help='File with geometry to use. Must be readable by GeoPandas')
 @click.option(
     '-r',
     '--radius',
@@ -55,13 +55,13 @@ def main():
     default=50,
     show_default=True,
     type=int,
-    help='number of results per page')
+    help='Number of results per page')
 @click.option(
     '--page-all/--no-page-all',
     is_flag=True,
     default=True,
     show_default=True,
-    help='page over all responses')
+    help='Page over all responses')
 def stops(**kwargs):
     """Request stops info"""
     kwargs = handle_geometry(**kwargs)
@@ -83,7 +83,7 @@ def stops(**kwargs):
     required=False,
     default=None,
     type=click.Path(exists=True, file_okay=True, readable=True),
-    help='File with geometry to use. Must be readable by geopandas')
+    help='File with geometry to use. Must be readable by GeoPandas')
 @click.option(
     '-r',
     '--radius',
@@ -106,13 +106,13 @@ def stops(**kwargs):
     default=50,
     show_default=True,
     type=int,
-    help='number of results per page')
+    help='Number of results per page')
 @click.option(
     '--page-all/--no-page-all',
     is_flag=True,
     default=True,
     show_default=True,
-    help='page over all responses')
+    help='Page over all responses')
 def operators(**kwargs):
     """Request operators info"""
     kwargs = handle_geometry(**kwargs)
@@ -134,7 +134,7 @@ def operators(**kwargs):
     required=False,
     default=None,
     type=click.Path(exists=True, file_okay=True, readable=True),
-    help='File with geometry to use. Must be readable by geopandas')
+    help='File with geometry to use. Must be readable by GeoPandas')
 @click.option(
     '-r',
     '--radius',
@@ -178,13 +178,13 @@ def operators(**kwargs):
     default=50,
     show_default=True,
     type=int,
-    help='number of results per page')
+    help='Number of results per page')
 @click.option(
     '--page-all/--no-page-all',
     is_flag=True,
     default=True,
     show_default=True,
-    help='page over all responses')
+    help='Page over all responses')
 def routes(**kwargs):
     """Request routes info"""
     kwargs = handle_geometry(**kwargs)
@@ -206,7 +206,7 @@ def routes(**kwargs):
     required=False,
     default=None,
     type=click.Path(exists=True, file_okay=True, readable=True),
-    help='File with geometry to use. Must be readable by geopandas')
+    help='File with geometry to use. Must be readable by GeoPandas')
 @click.option(
     '--traversed-by',
     required=False,
@@ -238,13 +238,13 @@ def routes(**kwargs):
     default=50,
     show_default=True,
     type=int,
-    help='number of results per page')
+    help='Number of results per page')
 @click.option(
     '--page-all/--no-page-all',
     is_flag=True,
     default=True,
     show_default=True,
-    help='page over all responses')
+    help='Page over all responses')
 def route_stop_patterns(**kwargs):
     """Request routes info"""
     kwargs = handle_geometry(**kwargs)
@@ -266,7 +266,7 @@ def route_stop_patterns(**kwargs):
     required=False,
     default=None,
     type=click.Path(exists=True, file_okay=True, readable=True),
-    help='File with geometry to use. Must be readable by geopandas')
+    help='File with geometry to use. Must be readable by GeoPandas')
 @click.option(
     '--origin-onestop-id',
     required=False,
@@ -338,13 +338,13 @@ def route_stop_patterns(**kwargs):
     default=50,
     show_default=True,
     type=int,
-    help='number of results per page')
+    help='Number of results per page')
 @click.option(
     '--page-all/--no-page-all',
     is_flag=True,
     default=True,
     show_default=True,
-    help='page over all responses')
+    help='Page over all responses')
 def schedule_stop_pairs(**kwargs):
     """Request schedule stop pairs info"""
     kwargs = handle_geometry(**kwargs)
@@ -467,7 +467,6 @@ main.add_command(schedule_stop_pairs)
 main.add_command(route_stop_patterns)
 main.add_command(onestop_id)
 main.add_command(feeds)
-
 
 if __name__ == '__main__':
     main()
