@@ -14,6 +14,7 @@ ALLOWED_GEOMETRY_INTERSECTION_TYPES = [
     'MultiLineString',
 ] # yapf: disable
 
+# Endpoint and whether it accepts GeoJSON responses
 ALL_ENDPOINT_TYPES = {
     'stops': '.geojson',
     'operators': '.geojson',
@@ -21,6 +22,7 @@ ALL_ENDPOINT_TYPES = {
     'route_stop_patterns': '.geojson',
     'schedule_stop_pairs': '',
     'onestop_id': '',
+    'feeds': '.geojson',
 }
 
 
@@ -193,6 +195,27 @@ def onestop_id(oid):
           operator)
     """
     return _request_transit_land('onestop_id', params={'id': oid})
+
+
+def feeds(**kwargs):
+    """Request feeds info
+
+    Args:
+        - geometry: either Polygon or MultiPolygon, to search for stops within
+          the geometry. If a Polygon or MultiPolygon is provided, the search
+          will be done by bounding box, and then results will be filtered for
+          intersection.
+    """
+    allowed_keys = [
+        'geometry',
+        'per_page',
+        'page_all',
+    ]
+    if any(k not in allowed_keys for k in kwargs.keys()):
+        msg = f'invalid parameter; allowed parameters are:\n{allowed_keys}'
+        raise ValueError(msg)
+
+    return base(endpoint='feeds', **kwargs)
 
 
 def base(

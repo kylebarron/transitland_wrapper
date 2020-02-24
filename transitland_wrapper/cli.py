@@ -386,6 +386,42 @@ def onestop_id(oid, file):
                     click.echo(json.dumps(res, separators=(',', ':')))
 
 
+@click.command()
+@click.option(
+    '-b',
+    '--bbox',
+    required=False,
+    default=None,
+    type=str,
+    help='Bounding box to search within')
+@click.option(
+    '-g',
+    '--geometry',
+    required=False,
+    default=None,
+    type=click.Path(exists=True, file_okay=True, readable=True),
+    help='File with geometry to use. Must be readable by GeoPandas')
+@click.option(
+    '-p',
+    '--per-page',
+    required=False,
+    default=50,
+    show_default=True,
+    type=int,
+    help='Number of results per page')
+@click.option(
+    '--page-all/--no-page-all',
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help='Page over all responses')
+def feeds(**kwargs):
+    """Request feeds info"""
+    kwargs = handle_geometry(**kwargs)
+    features_iter = transitland.feeds(**kwargs)
+    write_to_stdout(features_iter)
+
+
 def handle_geometry(**kwargs):
     bbox = kwargs.pop('bbox')
     geometry_file = kwargs.pop('geometry')
@@ -430,6 +466,8 @@ main.add_command(routes)
 main.add_command(schedule_stop_pairs)
 main.add_command(route_stop_patterns)
 main.add_command(onestop_id)
+main.add_command(feeds)
+
 
 if __name__ == '__main__':
     main()
