@@ -28,13 +28,13 @@ Usage: transitland operators [OPTIONS]
 Options:
   -b, --bbox TEXT             Bounding box to search within
   -g, --geometry PATH         File with geometry to use. Must be readable by
-                              geopandas
+                              GeoPandas
   -r, --radius FLOAT          radius in meters to search around, default 100m
                               for Point geometries. Used only for Point
                               geometries.
   --gtfs-id TEXT              ID used in a GTFS feed's agencies.txt file
-  -p, --per-page INTEGER      number of results per page  [default: 50]
-  --page-all / --no-page-all  page over all responses  [default: True]
+  -p, --per-page INTEGER      Number of results per page  [default: 50]
+  --page-all / --no-page-all  Page over all responses  [default: False]
   --help                      Show this message and exit.
 ```
 
@@ -49,7 +49,7 @@ Usage: transitland routes [OPTIONS]
 Options:
   -b, --bbox TEXT                 Bounding box to search within
   -g, --geometry PATH             File with geometry to use. Must be readable
-                                  by geopandas
+                                  by GeoPandas
   -r, --radius FLOAT              radius in meters to search around, default
                                   100m for Point geometries. Used only for
                                   Point geometries.
@@ -62,8 +62,8 @@ Options:
   --gtfs-id TEXT                  ID used in a GTFS feed's routes.txt file
   --include-geometry / --no-include-geometry
                                   Include route geometry  [default: True]
-  -p, --per-page INTEGER          number of results per page  [default: 50]
-  --page-all / --no-page-all      page over all responses  [default: True]
+  -p, --per-page INTEGER          Number of results per page  [default: 50]
+  --page-all / --no-page-all      Page over all responses  [default: False]
   --help                          Show this message and exit.
 ```
 
@@ -77,15 +77,15 @@ Usage: transitland stops [OPTIONS]
 Options:
   -b, --bbox TEXT             Bounding box to search within
   -g, --geometry PATH         File with geometry to use. Must be readable by
-                              geopandas
+                              GeoPandas
   -r, --radius FLOAT          radius in meters to search around, default 100m
                               for Point geometries. Used only for Point
                               geometries.
   --served-by TEXT            search by operator onestop_id or route
                               onestop_id
   --gtfs-id TEXT              ID used in a GTFS feed's stops.txt file
-  -p, --per-page INTEGER      number of results per page  [default: 50]
-  --page-all / --no-page-all  page over all responses  [default: True]
+  -p, --per-page INTEGER      Number of results per page  [default: 50]
+  --page-all / --no-page-all  Page over all responses  [default: False]
   --help                      Show this message and exit.
 ```
 
@@ -99,7 +99,7 @@ Usage: transitland route-stop-patterns [OPTIONS]
 Options:
   -b, --bbox TEXT             Bounding box to search within
   -g, --geometry PATH         File with geometry to use. Must be readable by
-                              geopandas
+                              GeoPandas
   --traversed-by TEXT         find all Route Stop Patterns belonging to route
   --stops-visited TEXT        any one or more stop Onestop IDs, separated by
                               comma. Finds Route Stop Patterns with
@@ -107,8 +107,8 @@ Options:
   --trips TEXT                any one or more trip ids, separated by comma.
                               Finds Route Stop Patterns with specified trips
                               in trips
-  -p, --per-page INTEGER      number of results per page  [default: 50]
-  --page-all / --no-page-all  page over all responses  [default: True]
+  -p, --per-page INTEGER      Number of results per page  [default: 50]
+  --page-all / --no-page-all  Page over all responses  [default: False]
   --help                      Show this message and exit.
 ```
 
@@ -122,7 +122,7 @@ Usage: transitland schedule-stop-pairs [OPTIONS]
 Options:
   -b, --bbox TEXT                 Bounding box to search within
   -g, --geometry PATH             File with geometry to use. Must be readable
-                                  by geopandas
+                                  by GeoPandas
   --origin-onestop-id TEXT        Find all Schedule Stop Pairs from origin
   --destination-onestop-id TEXT   Find all Schedule Stop Pairs to a
                                   destination
@@ -141,8 +141,8 @@ Options:
   --operator-onestop-id TEXT      Find all Schedule Stop Pairs by operator
   --active / --no-active          Schedule Stop Pairs from active FeedVersions
                                   [default: True]
-  -p, --per-page INTEGER          number of results per page  [default: 50]
-  --page-all / --no-page-all      page over all responses  [default: True]
+  -p, --per-page INTEGER          Number of results per page  [default: 50]
+  --page-all / --no-page-all      Page over all responses  [default: False]
   --help                          Show this message and exit.
 ```
 
@@ -151,12 +151,30 @@ Options:
 ```
 Usage: transitland onestop-id [OPTIONS]
 
+  Request onestop_id info
+
 Options:
   --oid TEXT       a Onestop ID for any type of entity (for example, a stop or
                    an operator)
   -f, --file PATH  a file with one or more Onestop IDs, with each on their own
                    line.
   --help           Show this message and exit.
+```
+
+### Feeds
+
+```
+Usage: transitland feeds [OPTIONS]
+
+  Request feeds info
+
+Options:
+  -b, --bbox TEXT             Bounding box to search within
+  -g, --geometry PATH         File with geometry to use. Must be readable by
+                              GeoPandas
+  -p, --per-page INTEGER      Number of results per page  [default: 50]
+  --page-all / --no-page-all  Page over all responses  [default: False]
+  --help                      Show this message and exit.
 ```
 
 ## Python API
@@ -173,6 +191,7 @@ transitland_wrapper.routes()
 transitland_wrapper.route_stop_patterns()
 transitland_wrapper.schedule_stop_pairs()
 transitland_wrapper.onestop_id()
+transitland_wrapper.feeds()
 ```
 
 ### Stops
@@ -264,6 +283,14 @@ transitland_wrapper.onestop_id()
 - oid: a Onestop ID for any type of entity (for example, a stop or an operator)
 ```
 
+### Feeds
+
+```
+- geometry: either Polygon or MultiPolygon, to search for stops within
+  the geometry. If a Polygon or MultiPolygon is provided, the search
+  will be done by bounding box, and then results will be filtered for
+  intersection.
+```
 
 ## Contributing
 
