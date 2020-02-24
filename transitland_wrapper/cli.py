@@ -59,7 +59,7 @@ def main():
 @click.option(
     '--page-all/--no-page-all',
     is_flag=True,
-    default=True,
+    default=False,
     show_default=True,
     help='Page over all responses')
 def stops(**kwargs):
@@ -110,7 +110,7 @@ def stops(**kwargs):
 @click.option(
     '--page-all/--no-page-all',
     is_flag=True,
-    default=True,
+    default=False,
     show_default=True,
     help='Page over all responses')
 def operators(**kwargs):
@@ -182,7 +182,7 @@ def operators(**kwargs):
 @click.option(
     '--page-all/--no-page-all',
     is_flag=True,
-    default=True,
+    default=False,
     show_default=True,
     help='Page over all responses')
 def routes(**kwargs):
@@ -242,7 +242,7 @@ def routes(**kwargs):
 @click.option(
     '--page-all/--no-page-all',
     is_flag=True,
-    default=True,
+    default=False,
     show_default=True,
     help='Page over all responses')
 def route_stop_patterns(**kwargs):
@@ -342,7 +342,7 @@ def route_stop_patterns(**kwargs):
 @click.option(
     '--page-all/--no-page-all',
     is_flag=True,
-    default=True,
+    default=False,
     show_default=True,
     help='Page over all responses')
 def schedule_stop_pairs(**kwargs):
