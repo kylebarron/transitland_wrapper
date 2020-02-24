@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.5.0] - 2020-02-23
+
+- Add feeds endpoint
+- Set `page-all` to false by default
+
 ## [0.4.2] - 2020-02-19
 
 - Fix bug where a string was treated as an iterable to be joined
